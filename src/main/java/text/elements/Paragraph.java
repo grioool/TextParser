@@ -45,9 +45,11 @@ public class Paragraph {
 
     @Override
     public String toString() {
-        return "text.elements.Paragraph{" +
-                "type=" + type +
-                ", sentences=" + sentences +
-                '}';
+        String paragraphBegin  = type == Type.CODE ? "" : "\t";
+        StringBuilder sb = new StringBuilder(paragraphBegin);
+        for(Sentence sentence : sentences) {
+            sb.append(sentence);
+        }
+        return sb.toString();
     }
 }

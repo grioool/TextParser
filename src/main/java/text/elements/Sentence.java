@@ -31,8 +31,12 @@ public class Sentence {
 
     @Override
     public String toString() {
-        return "text.elements.Sentence{" +
-                "sentenceItems=" + sentenceItems +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        for(SentenceItem item : sentenceItems) {
+            if(item instanceof Word)
+                sb.append(" ");
+            sb.append(item);
+        }
+        return sb.toString();
     }
 }

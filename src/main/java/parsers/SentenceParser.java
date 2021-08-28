@@ -11,7 +11,7 @@ public class SentenceParser implements IParser<Sentence> {
 
     public Sentence parse(String plain) {
         plain = plain.trim();
-        Pattern pattern = Pattern.compile("(\\s+)|(\\s*(([.]{2,3})|([.?!,:;\"'`()\\[\\]{}]))\\s*)");
+        Pattern pattern = Pattern.compile("(\\s+)|(\\s*(([.]{2,3})|([.?!,:;]\\s)|([\"'`()\\[\\]{}])|($))\\s*)");
         Matcher matcher = pattern.matcher(plain);
 
         int nextStart = 0;

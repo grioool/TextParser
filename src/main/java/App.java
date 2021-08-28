@@ -1,9 +1,12 @@
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import parsers.TextParser;
+import tasks.Tasks;
 import text.elements.Text;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class App {
@@ -18,26 +21,6 @@ public class App {
         return buffer;
     }
 
-//    public static void parseTextFromFile() {
-//        try {
-//            String textString = new String(readFromFile(), StandardCharsets.UTF_8);
-//            TextParser textParser = new TextParser();
-//            Text textParsed = textParser.parse(textString);
-//            System.out.println(Arrays.toString(textParsed));
-//            SentenceParser sentenceParser = new SentenceParser();
-//            String[] words = sentenceParser.parse(textString);
-//            System.out.println(Arrays.toString(words));
-//        } catch (IOException e) {
-//            logger.error("", e);
-//        }
-//    }
-    
-    public static void writeToFile(byte[] content) throws IOException {
-        OutputStream outputStream = new FileOutputStream("outputText.txt");
-        outputStream.write(content);
-        outputStream.close();
-    }
-
     public static void getInformationAboutApp() {
         logger.info("Information handling app. You can read text from file and parse it. \nYou can use 3 functions of this app: \n 1 - find word in the first sentence, which is only in this sentence. \n 2 - In all the questionable sentence find and write words with needed size. \n 3 - Words with first vowel letter sort by alphabet by first consonant letter.\nApp was made by Grigorieva Olga \n");
     }
@@ -45,16 +28,15 @@ public class App {
     public static boolean chooseOption() {
         logger.info("Hello! It's information handling app.");
         logger.info("Please, choose option. \n " +
-                "1 - read and parse text from file \n " +
+                "1 - parse text from file and write to file \n " +
                 "2 - find word in the first sentence, which is only in this sentence. \n " +
                 "3 - in all the quest sentence find and write words with needed size. \n " +
                 "4 - words with first vowel letter sort by alphabet by first consonant letter. \n " +
-                "5 - write text to file \n " +
-                "6 - exit \n");
+                "5 - exit \n");
         Scanner in = new Scanner(System.in);
         switch (in.nextLine()) {
             case "1":
-//                parseTextFromFile();
+                parseFromFileWriteToFile();
                 return true;
             case "2":
                 findUniqueWords();
@@ -66,9 +48,6 @@ public class App {
                 findWordsWithFirstVowel();
                 return true;
             case "5":
-                //writeToFile();
-                return true;
-            case "6":
                 logger.info("Thank you for using app! Goodbye!");
                 return false;
             default:
@@ -77,7 +56,43 @@ public class App {
         }
     }
 
+    private static void findUniqueWords() {
+        try {
+            String plainText = new String(readFromFile());
+            TextParser textParser = new TextParser();
+            Text text = textParser.parse(plainText);
+            logger.info(text + "");
+            logger.info(Tasks.getUniqueWords(text) + "");
+        } catch (IOException e) {
+            logger.error("", e);
+        }
+    }
+
+    private static void parseFromFileWriteToFile() {
+        try {
+            String plainText = new String(readFromFile());
+            TextParser textParser = new TextParser();
+            Text text = textParser.parse(plainText);
+            OutputStream outputStream = new FileOutputStream("outputText.txt");
+            outputStream.write(text.toString().getBytes(StandardCharsets.UTF_8));
+            logger.info(text.toString() + "");
+            outputStream.close();
+            logger.info(text + "");
+        } catch (IOException e) {
+            logger.error("", e);
+        }
+    }
+
     private static void findWordsWithFirstVowel() {
+        try {
+            String plainText = new String(readFromFile());
+            TextParser textParser = new TextParser();
+            Text text = textParser.parse(plainText);
+            logger.info(text + "");
+            logger.info(Tasks.getWordsSortedByFirstConsonant(text) + "");
+        } catch (IOException e) {
+            logger.error("", e);
+        }
     }
 
 
@@ -97,25 +112,19 @@ public class App {
                 logger.error("Invalid number");
             }
         } while (!isValidInteger(size));
-
-//        QuestSentence questSentence = new QuestSentence(size);
-//        questSentence.findWords();
-    }
-
-    private static void findUniqueWords() {
-
-    }
-
-    public static void main(String[] args) {
         try {
             String plainText = new String(readFromFile());
             TextParser textParser = new TextParser();
             Text text = textParser.parse(plainText);
-            System.out.println(text);
+            logger.info(text + "");
+            logger.info(Tasks.getWordsInQuestSentenceByLength(text, size) + "");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
-//        while (chooseOption()){
-//        }
+    }
+
+    public static void main(String[] args) {
+        while (chooseOption()){
+        }
     }
 }

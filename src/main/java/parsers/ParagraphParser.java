@@ -2,6 +2,7 @@ package parsers;
 
 import text.elements.Paragraph;
 import text.elements.Sentence;
+import text.elements.Word;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +18,8 @@ public class ParagraphParser implements IParser<Paragraph> {
     @Override
     public Paragraph parse(String plain) {
         plain = plain.trim();
-        Pattern pattern = Pattern.compile("[.!?]\\s");
+        final String sentenceFinalizers = ".!?:";
+        Pattern pattern = Pattern.compile("[" + sentenceFinalizers + "]\\s");
         Matcher matcher = pattern.matcher(plain);
 
         int nextStart = 0;
@@ -27,16 +29,20 @@ public class ParagraphParser implements IParser<Paragraph> {
             case TEXT:
                 while (matcher.find()) {
                     String sentence = plain.substring(nextStart, matcher.start() + 1).trim();
-                    if (!sentence.endsWith(".")) sentence = sentence + ".";
+                    if (!sentence.substring(sentence.length() - 1).matches("[" + sentenceFinalizers + "]")) sentence = sentence + ".";
 
                     paragraph.getSentences().add(sentenceParser.parse(sentence));
                     nextStart = matcher.end();
                 }
                 paragraph.getSentences().add(sentenceParser.parse(plain.substring(nextStart)));
                 break;
-            case CODE:
             case TITLE:
                 paragraph.getSentences().add(sentenceParser.parse(plain));
+                break;
+            case CODE:
+                Sentence sentence = new Sentence();
+                sentence.getSentenceItems().add(new Word(plain));
+                paragraph.getSentences().add(sentence);
                 break;
             default:
                 throw new NullPointerException();

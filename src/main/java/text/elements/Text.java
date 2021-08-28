@@ -31,9 +31,11 @@ public class Text {
 
     @Override
     public String toString() {
-        return "text.elements.Text{" +
-                "sentences=" + paragraphs +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        for(Paragraph paragraph : paragraphs) {
+            sb.append(paragraph).append("\n");
+        }
+        return sb.toString().replaceAll("\\s+$", "");
     }
 }
 

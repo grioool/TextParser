@@ -15,9 +15,4 @@ public class Word extends SentenceItem {
     public boolean equals(Object o) {
         return super.equals(o);
     }
-
-    @Override
-    public String toString() {
-        return "Word{ " + value + " }";
-    }
 }

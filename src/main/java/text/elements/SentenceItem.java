@@ -6,6 +6,10 @@ public abstract class SentenceItem {
 
     protected String value;
 
+    public String getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -21,8 +25,6 @@ public abstract class SentenceItem {
 
     @Override
     public String toString() {
-        return "text.elements.SentenceItem{" +
-                "value='" + value + '\'' +
-                '}';
+        return value;
     }
 }
